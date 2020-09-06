@@ -1,0 +1,125 @@
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+p {
+    margin: 0;
+}
+
+.weather-container{
+    position: relative;
+}
+
+#weatherTemplate{
+    display: none;
+}
+
+.weatherData{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.d-none{
+    display: none;
+}
+
+.period{
+font-size: 0.65rem;
+}
+
+.searchContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 90px 0px 90px 0
+}
+
+.searchbox {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.searchbox>input {
+    width: 140px;
+    height: 30px;
+}
+
+#searchbutton{
+    width: 60px;
+    height: 35px;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.event-status.safe{
+    background-color: rgb(3, 151, 3);
+    color: rgb(0, 255, 0);
+}
+
+.weather-card {
+    background-color: rgb(255, 255, 255);
+    padding: 5px;
+    border: 1px solid rgb(54, 54, 54);
+    transition-duration: 0.5s;
+}
+
+.weather-card:hover{
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.151);
+    transition-duration: 0.5s;
+}
+
+.weather-details {
+    height: 20%;
+    font-size: 0.85rem;
+}
+
+.weather-description {
+    font-size: 0.75rem;
+    text-transform: capitalize;
+}
+
+.filterOptionsContainer > label {
+    font-size: small;
+}
+
+.filterOptionsContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.weather-image {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 60%;
+}
+
+.weather-card {
+    width: 200px;
+    height: 270px;
+    border: 1px solid rgb(212, 212, 212);
+    border-radius: 3px;
+}
+
+.weather-header {
+    font-family: poppins;
+    height: 20%;
+    padding: 5px 15px
+}
+
+.event-status {
+    background-color: rgb(136, 136, 136);
+    border-radius: 50px;
+}
+
+
+.iconImg{
+    width: 80%;
+    height: 100%;
+}
