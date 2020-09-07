@@ -38,6 +38,30 @@ document.addEventListener('DOMContentLoaded', function () {
     data.then(function (data) {
         weatherData = data;
 
+
+        // displayCurrentWeatherData(weatherData);
+
+        // displayWeeklyWeatherData(weatherData);
+
+
+
+        console.log(getWeatherInformation(weatherData));
+
+        return;
+    })
+
+
+
+
+
+    // let hourlyquery = `http://pro.openweathermap.org/data/2.5/forecast/hourly?q=${cityname}&appid=${'0fa93f92f4b80637cbf3664a3882c2b0'}`;
+    // const hourlyForcast = getAPIdata(encodeURI(hourlyquery));
+    // hourlyForcast.then(function(data){
+    //     console.log(data);
+    // })
+
+    function displayCurrentWeatherData(weatherData) {
+        // get all DOM elements to connect to
         let card = document.querySelector('#c-1')
         let cardTitle = card.querySelector('.weather-title');
         let cardImage = card.querySelector('.weather-image');
@@ -45,22 +69,29 @@ document.addEventListener('DOMContentLoaded', function () {
         let cardDescription = card.querySelector('.weather-description');
         let cardEventStatus = card.querySelector('.event-status');
 
-
+        // Store only the necessary weatherDetails
         const CurrentWeatherDetails = {
             humidity: weatherData.current.humidity,
             temperature: weatherData.current.temp,
             speed: weatherData.current.wind_speed,
         }
 
+
+        // save the necessary data to localstorage
+        localStorage.setItem('weatherData', JSON.stringify(weatherData))
+
+
+        // prepare and parse data for rendering
         const detailsOutput = `<span>Humidity: ${CurrentWeatherDetails.humidity}%</span> <span>Temperature: ${CurrentWeatherDetails.temperature}°C</span> <span>Wind Speed: ${CurrentWeatherDetails.speed} miles/hour.</span>`
 
-        let eventStatus;
-
+        // render in first card
         cardTitle.innerHTML = 'Today'
         cardDescription.innerHTML = weatherData.current.weather[0].description;
         cardDetails.innerHTML = detailsOutput;
-        cardEventStatus.innerHTML = eventStatus;
 
+        // now based on the type of weather do select one category for output in the first card
+        let eventStatus;
+        cardEventStatus.innerHTML = eventStatus;
         switch (weatherData.current.weather[0].description.toLowerCase()) {
             case 'clear sky':
                 cardImage.innerHTML = `<img class="iconImg" src="${WEATHERICON.clear}" />`;
@@ -116,19 +147,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 eventStatus = `<span>Safe</span>`;
                 cardEventStatus.innerHTML = eventStatus;
                 break;
-
             default:
                 cardImage.innerHTML = `<img class="iconImg" src="${WEATHERICON.clear}" />`;
                 break;
         }
 
+    }
+
+    function displayWeeklyWeatherData(weatherData) {
         var cardTemplate = document.querySelector(`#weatherTemplate`);
         let dayNumber = new Date().getDay();
         console.log(dayNumber);
-
-
-
-
 
         var newCard
         for (let i = 0; i < weatherData.daily.length - 1; i++) {
@@ -141,11 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let cardEventStatus = newCard.querySelector('.event-status');
             newCard.classList.remove('d-none')
 
-            const DailyWeatherDetails = {
-                humidity: weatherData.daily[i].humidity,
-                temperature: weatherData.daily[i].temp.max,
-                speed: weatherData.daily[i].wind_speed,
-            }
+
 
             const detailsOutput = `<span>Humidity: ${DailyWeatherDetails.humidity}%</span> <span>Temperature: ${DailyWeatherDetails.temperature}°C</span> <span>Wind Speed: ${DailyWeatherDetails.speed} miles/hour.</span>`
 
@@ -222,24 +247,112 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             weatherDOMContainer.innerHTML += newCard.innerHTML;
+        }
+    }
 
+    function getWeatherInformation(data,i) {
+        let switchClause; 
+        let WeatherDetails;
+
+        if (i == undefined) {
+            WeatherDetails = {
+                humidity: weatherData.current.humidity,
+                temperature: weatherData.current.temp,
+                speed: weatherData.current.wind_speed,
+            }
+            switchClause = data.current.weather[0].description.toLowerCase()
+        }else{
+            WeatherDetails = {
+                humidity: data.daily[i].humidity,
+                temperature: data.daily[i].temp.max,
+                speed: data.daily[i].wind_speed,
+            }
+            switchClause = data.current.weather[0].description.toLowerCase()
         }
 
-        return;
-    })
 
+        
 
+        switch (switchClause) {
+            case 'clear sky':
+                return {
+                    cardImage: WEATHERICON.clear,
+                    eventPossibilityClass: 'safe',
+                    details: WeatherDetails
+                }
+                break;
+            case 'few clouds':
+                return {
+                    cardImage: WEATHERICON.cloudy,
+                    eventPossibilityClass: 'safe',
+                    details: WeatherDetails
+                }
+                break;
+            case 'scattered clouds':
 
+                return {
+                    cardImage: WEATHERICON.cloudy,
+                    eventPossibilityClass: 'safe',
+                    details: WeatherDetails
+                }
+                break;
+            case 'broken clouds':
 
+                return {
+                    cardImage: WEATHERICON.cloudy,
+                    eventPossibilityClass: 'safe',
+                    details: WeatherDetails
+                }
 
-    // let hourlyquery = `http://pro.openweathermap.org/data/2.5/forecast/hourly?q=${cityname}&appid=${'0fa93f92f4b80637cbf3664a3882c2b0'}`;
-    // const hourlyForcast = getAPIdata(encodeURI(hourlyquery));
-    // hourlyForcast.then(function(data){
-    //     console.log(data);
-    // })
+                break;
+            case 'shower rain':
 
+                return {
+                    cardImage: WEATHERICON.cloudy_rains_light,
+                    eventPossibilityClass: 'warn',
+                    details: WeatherDetails
+                }
+                break;
+            case 'moderate rain':
 
+                return {
+                    cardImage: WEATHERICON.cloudy_rains_light,
+                    eventPossibilityClass: 'warn',
+                    details: WeatherDetails
+                }
+                break;
+            case 'rain':
+                return {
+                    cardImage: WEATHERICON.heavy_rains,
+                    eventPossibilityClass: 'unsafe',
+                    details: WeatherDetails
+                }
+                break;
+            case 'thunderstorm':
 
+                return {
+                    cardImage: WEATHERICON.heavy_rains,
+                    eventPossibilityClass: 'unsafe',
+                    details: WeatherDetails
+                }
+                break
+            case 'snow':
+                return {
+                    cardImage: WEATHERICON.snowy,
+                    eventPossibilityClass: 'safe',
+                    details: WeatherDetails
+                }
+                break;
+            default:
+                return {
+                    cardImage: WEATHERICON.error,
+                    eventPossibilityClass: 'Unknown',
+                    details: null
+                }
+                break;
+        }
+
+    }
 
 
     async function getAPIdata(url) {

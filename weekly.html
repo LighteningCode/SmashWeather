@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Weather</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <h3 class="text-center">Smash It Weather</h3>
+
+    <section class="searchContainer">
+        <button id="summary"><a href="./index.html">Summary</a></button>
+        <button id="weekly"><a href="./weekly.html">Weekly</a></button>
+        <button id="hourly"><a href="./hourly.html">Hourly</a></button>
+        <!-- summary, hourly, weekly -->
+    </section>
+
+    <section class="weatherData">
+
+        <div id="c-1" class="weather-container">
+ 
+            <div class="weather-card">
+
+                <div class="weather-header">
+                    <div class="event-status safe text-center">
+
+                    </div>
+                    <h3 class="weather-title text-center">Loading...</h3>
+                    <p class="weather-description text-center"></p>
+                </div>
+
+                <div class="weather-image">
+
+                </div>
+
+                <div class="weather-details text-center">
+
+                </div>
+            </div>
+        </div>
+
+        <div id="weatherTemplate" class="weather-container">
+            <div class="weather-card">
+
+                <div class="weather-header">
+                    <div class="event-status text-center">
+
+                    </div>
+                    <h3 class="weather-title text-center">Loading...</h3>
+                    <p class="weather-description text-center"></p>
+                </div>
+
+                <div class="weather-image">
+
+                </div>
+
+                <div class="weather-details text-center">
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+    <script src="./index.js"></script>
+</body>
+</html>
