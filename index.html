@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="./styles.css">
+    <link rel="manifest" href="./manifest.webmanifest">
 </head>
 
 <body>
@@ -15,28 +16,50 @@
     <h3 class="text-center">Smash It Weather</h3>
 
 
-    <section class="searchContainer">
-        <button id="summary"><a href="./index.html">Summary</a></button>
+    <section class="nav-btns">
+        <button class="active" id="summary"><a href="./index.html">Summary</a></button>
         <button id="weekly"><a href="./weekly.html">Weekly</a></button>
         <button id="hourly"><a href="./hourly.html">Hourly</a></button>
         <!-- summary, hourly, weekly -->
     </section>
 
 
- <div class="summaryConatiner">
-     <div class="summaryItem">
-        <h3 id="title" class="text-center"></h3>
-        <h5 id="date" class="text-center"></h5>
-    
-        <div id="weatherImage"></div>
-    
-        <div id="weatherDetails" class="text-center"></div>
-     </div>
- </div>
+    <section class="searchContainer">
+        <input id="searchbox" type="text" placeholder="Type country or region here"><button id="searchButton">search</button>
+    </section>
+
+
+    <div class="summaryConatiner">
+        <div class="summaryItem">
+            <h3 id="title" class="text-center"></h3>
+            <h5 id="date" class="text-center"></h5>
+
+            <div id="weatherImage"></div>
+
+            <div id="weatherDetails" class="text-center"></div>
+        </div>
+    </div>
 
 
 
     <script src="./index.js"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    //register the service worker
+                    const registration = await navigator.serviceWorker.register('index.sw.js');
+                    console.log('Service worker registration sucessful');
+                    console.log(`Registered with scope: ${registration.scope}`);
+                } catch (e) {
+                    console.log('Service worker registration failed');
+                    console.log(e);
+                }
+            });
+        }
+
+    </script>
 </body>
 
 </html>

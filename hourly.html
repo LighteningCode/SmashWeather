@@ -5,17 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hourly Weather</title>
     <link rel="stylesheet" href="./styles.css">
+    <link rel="manifest" href="./manifest.webmanifest">
+
 </head>
 <body>
     <h3 class="text-center">Smash It Weather</h3>
 
-    <section class="searchContainer">
+    <section class="nav-btns">
         <button id="summary"><a href="./index.html">Summary</a></button>
         <button id="weekly"><a href="./weekly.html">Weekly</a></button>
-        <button id="hourly"><a href="./hourly.html">Hourly</a></button>
+        <button class="active" id="hourly"><a href="./hourly.html">Hourly</a></button>
+        
         <!-- summary, hourly, weekly -->
     </section>
 
+    <h4 id="weatherLocation" class="text-center"></h4>
     
     <section class="weatherData">
 

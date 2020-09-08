@@ -1,0 +1,17 @@
+{
+  "name": "Smash It Weather",
+  "short_name": "Smash Weather",
+  "description":"Real-time Weather Forecast app",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "theme_color": "#1698ff",
+  "background_color": "#001f29",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/index.html"
+}
