@@ -2,9 +2,9 @@ const worker = {
 
     message: (e) => {
         try {
-            // postMessage({ message: `From worker: ${e.data.message}` });
+            let dat = { "asfgag":"asdsga"}
             setInterval(() => {
-                postMessage({ message: `worker` });
+                postMessage({ message: dat });
             }, 2000);
         } catch (ex) {
             postMessage({ type: 'error', message: ex });

@@ -4,13 +4,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const WEATHERICON = {
         clear: "./weatherStates/weather-clear.png",
+        clear_night: "./weatherStates/weather-clear-night.png",
+        part_clouds: "./weatherStates/weather-part-clouds.png",
         cloudy: "./weatherStates/weather-cloudy.png",
         cloudy_rains_light: "./weatherStates/weather-light-rains.png",
-        part_clouds: "./weatherStates/weather-part-clouds.png",
         heavy_rains: "./weatherStates/weather-rain-heavy.png",
+        thunderstorm: "./weatherStates/weather-thunderstorm.png",
         scattered_rains: "./weatherStates/weather-scattered-showers.png",
         snowy: "./weatherStates/weather-windy.png",
         windy: "./weatherStates/weather-windy.png",
+        error: "./weatherStates/weather-error.png",
     }
 
     const DaysOfWeek = [
@@ -38,10 +41,14 @@ document.addEventListener('DOMContentLoaded', function () {
     data.then(function (data) {
         weatherData = data;
 
-
-
-
         let pageLink = location.href.toString()
+
+
+        if (data == undefined || null) {
+            console.log(data);
+
+            throw new Error('Data unavaialble');
+        }
 
 
         if (pageLink.includes('weekly')) {
@@ -78,6 +85,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         return;
+    }).catch(function (error) {
+
+        console.error(error);
+
+
+        let card = document.querySelector('#c-1')
+        let cardTitle = card.querySelector('.weather-title');
+        let cardImage = card.querySelector('.weather-image');
+        let cardDetails = card.querySelector('.weather-details');
+        let cardDescription = card.querySelector('.weather-description');
+        let cardEventStatus = card.querySelector('.event-status');
+
+
+        cardTitle.innerHTML = `Error No Data`
+        cardImage.innerHTML = `<img class="iconImg" src="${WEATHERICON.error}" />`;
+        cardEventStatus.classList.remove('safe')
+        cardEventStatus.classList.remove('warn')
+        cardEventStatus.classList.remove('unsafe')
+        cardEventStatus.classList.add('error')
+        cardEventStatus.innerHTML = `<span>${'Error'}<span>`;
+        cardDescription.innerHTML = `No Data`;
+        cardDetails.innerHTML = error
+
     })
 
 
@@ -91,6 +121,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // })
 
     function displayCurrentWeatherData(weatherData) {
+
+        if (weatherData == undefined || null) {
+            throw new Error('Data unavaialble');
+        }
+
         // get all DOM elements to connect to
         let card = document.querySelector('#c-1')
         let cardTitle = card.querySelector('.weather-title');
@@ -137,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const WEATHER_INFROMATION = getWeatherInformation(weatherData, 'weekly', i)
+            console.log(WEATHER_INFROMATION);
 
 
             // render data
@@ -232,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 break;
             case 'overcast clouds':
                 return {
-                    cardImage: WEATHERICON.cloudy,
+                    cardImage: WEATHERICON.part_clouds,
                     eventPossibilityClass: 'safe',
                     details: WeatherDetails
                 }
@@ -269,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
             case 'thunderstorm':
 
                 return {
-                    cardImage: WEATHERICON.heavy_rains,
+                    cardImage: WEATHERICON.thunderstorm,
                     eventPossibilityClass: 'unsafe',
                     details: WeatherDetails
                 }
@@ -296,8 +332,9 @@ document.addEventListener('DOMContentLoaded', function () {
         let WeatherDetails;
 
 
-
-
+        if (data.cod == '404') {
+            throw new Error('No data from API')
+        }
 
         if (i == undefined) {
             if (type == 'current') {
@@ -328,10 +365,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     speed: data.daily[i].wind_speed,
                 }
                 switchClause = data.daily[i].weather[0].description.toLowerCase()
-                console.log(switchClause);
-                console.log(WeatherDetails);
-                console.log("");
-
             }
 
         }
@@ -354,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 break;
             case 'overcast clouds':
                 return {
-                    cardImage: WEATHERICON.cloudy,
+                    cardImage: WEATHERICON.part_clouds,
                     eventPossibilityClass: 'safe',
                     details: WeatherDetails
                 }
@@ -399,6 +432,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     details: WeatherDetails
                 }
                 break;
+            case 'heavy intensity rain':
+                return {
+                    cardImage: WEATHERICON.heavy_rains,
+                    eventPossibilityClass: 'unsafe',
+                    details: WeatherDetails
+                }
+                break;
             case 'light rain':
                 return {
                     cardImage: WEATHERICON.heavy_rains,
@@ -424,8 +464,8 @@ document.addEventListener('DOMContentLoaded', function () {
             default:
                 return {
                     cardImage: WEATHERICON.error,
-                    eventPossibilityClass: 'Unknown',
-                    details: null
+                    eventPossibilityClass: 'error',
+                    details: WeatherDetails
                 }
                 break;
         }
@@ -459,8 +499,8 @@ document.addEventListener('DOMContentLoaded', function () {
     worker.onmessage = (messageEvt) => {
         console.log(messageEvt)
     }
-    
-    worker.postMessage({message:"from client"})
+
+    // worker.postMessage({message:"from client"})
 });
 
 
