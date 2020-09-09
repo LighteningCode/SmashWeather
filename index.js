@@ -122,17 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-    function displayCurrentWeatherData(weatherData) {
+    function displayCurrentWeatherData(weatherData) {   
 
         if (weatherData == undefined || null) {
             throw new Error('Data unavaialble');
@@ -296,6 +286,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return {
                     cardImage: WEATHERICON.cloudy_rains_light,
+                    eventPossibilityClass: 'warn',
+                    details: WeatherDetails
+                }
+                break;
+            case 'very heavy rain':
+
+                return {
+                    cardImage: WEATHERICON.heavy_rains,
                     eventPossibilityClass: 'warn',
                     details: WeatherDetails
                 }
@@ -631,7 +629,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let summaryTitle = weatherData.location
                 let summaryDate = weatherData.time
                 let summaryImage = weatherData.icon
-                let summaryDetails = `<span>Humidity: ${weatherData.weatherDetails.humidity}%</span> <span>Temperature: ${weatherData.weatherDetails.temperature}°C</span> <span>Wind Speed: ${weatherData.weatherDetails.wind_speed} miles/hour.</span>`
+                let summaryDetails = `<span>Humidity: ${weatherData.weatherDetails.humidity}%</span> <span>Temperature: ${weatherData.weatherDetails.temperature}°K</span> <span>Wind Speed: ${weatherData.weatherDetails.wind_speed} miles/hour.</span>`
 
 
                 let summaryItem = document.querySelector('.summaryItem')
