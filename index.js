@@ -667,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let summaryItem = document.querySelector('.summaryItem')
                 summaryItem.querySelector('#title').innerHTML = summaryTitle
                 summaryItem.querySelector('#date').innerHTML = summaryDate
-                summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${summaryImage}" width="300" alt="${weatherData.location}_icon" />`
+                summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${summaryImage}" width="300" height="315" alt="${weatherData.location}_icon" />`
                 summaryItem.querySelector('#weatherDetails').innerHTML = summaryDetails
 
             }).catch(function (error) {
@@ -675,7 +675,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let summaryItem = document.querySelector('.summaryItem')
                 summaryItem.querySelector('#title').innerHTML = 'Unknown location'
                 summaryItem.querySelector('#date').innerHTML = 'No time'
-                summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${WEATHERICON.error}" width="300" alt="error" />`
+                summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${WEATHERICON.error}" width="300" height="315" alt="error" />`
                 summaryItem.querySelector('#weatherDetails').innerHTML = 'Seems like there is a problem with the name of the location you are searching'
             })
 
