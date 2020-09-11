@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 cardTitle.innerHTML = (epochToJsDate(weatherData.hourly[i].dt).getHours() - 12 == 0) ? "12 pm" : (epochToJsDate(weatherData.hourly[i].dt).getHours() - 12) + " pm"
             }
 
-            if ((epochToJsDate(weatherData.hourly[i].dt).getHours() - 12) > 6 && cardTitle.innerHTML.includes('pm')) {
+            if ((epochToJsDate(weatherData.hourly[i].dt).getHours() - 12) > 6 && cardTitle.innerHTML.includes('pm') && weatherData.hourly[i].weather[0].description === 'clear sky') {
                 cardImage.innerHTML = `<img class="iconImg" src="${WEATHERICON.clear_night}" alt="${weatherData.hourly[i].weather[0].description}" />`;
             } else {
                 cardImage.innerHTML = `<img class="iconImg" src="${WEATHER_INFROMATION.cardImage}" alt="${weatherData.hourly[i].weather[0].description}" />`;
