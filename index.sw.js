@@ -12,6 +12,7 @@ const urlsToCache = [
     "./weatherStates/weather-scattered-showers.png",
     "./weatherStates/weather-windy.png",
     "./weatherStates/weather-error.png",
+    "./index.html",
 ]
 
 
@@ -36,13 +37,11 @@ self.addEventListener('fetch', fetchEvent => {
 
     const getResponse = async (request) => {
 
-        console.log(`Fetching: ${url}`);
-
         let response;
 
         response = await caches.match(request);
         if (response && response.status === 200) {
-            console.log('File in cache. Returning cached version.');
+            console.log(`File in cache. Returning cached version of ${url}`);
             return response;
         }
 
@@ -55,9 +54,12 @@ self.addEventListener('fetch', fetchEvent => {
             return caches.match('./offline.html')
         }
 
-        const clone = response.clone();
-        const cache = await caches.open(CACHE_NAME);
-        cache.put(url, clone);
+        if (!url.includes('openweathermap')) {
+            const clone = response.clone();
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(url, clone);
+        }
+
         return response;
     };
 

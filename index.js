@@ -1,5 +1,8 @@
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    let currentPosition = {}
+
     var weatherData;
     const API_KEY = '5b240d5ca7b85efd188e3bcf200f8772';
     let pageLink = location.href.toString()
@@ -10,7 +13,33 @@ document.addEventListener('DOMContentLoaded', function () {
         currentLocationData = JSON.parse(currentLocationData);
         getQueryCurrentPlace(currentLocationData.location_name)
     } else {
-        getQueryCurrentPlace('new york');
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                currentPosition = { lat: position.coords.latitude, lon: position.coords.longitude }
+                getQueryCurrentPlace(currentPosition);
+            },
+            error => {
+                switch (error.code) {
+
+                    case 0: // unknown error
+                        console.log('The application has encountered an unknown error while trying to determine location.');
+                        break;
+
+                    case 1: // permission denied
+                        console.log('You chose not to allow this application access to your location.');
+                        break;
+
+                    case 2: // position unavailable
+                        console.log('The application was unable to determine your location.');
+                        break;
+
+                    case 3: // timeout
+                        console.log('The request to determine your location has timed out.');
+                        break;
+                }
+                getQueryCurrentPlace('new york');
+            }
+        );
     }
 
     const WEATHERICON = {
@@ -76,22 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             }
 
-
-
-
             // save the necessary data to localstorage
             localStorage.setItem('weatherData', JSON.stringify(weatherData))
-
-            // if (pageLink.includes('index')) {
-            //     worker.postMessage({ page: 'summary' })
-            // } else if (pageLink.includes('weekly')) {
-            //     worker.postMessage({ page: 'weekly' })
-            // } else if (pageLink.includes('hourly')) {
-            //     worker.postMessage({ page: 'hourly' })
-            // } else {
-            //     worker.postMessage({ page: '' })
-            // }
-
 
             return;
         }).catch(function (error) {
@@ -110,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
             cardTitle.innerHTML = `Error No Data`
             cardImage.innerHTML = `<img class="iconImg" src="${WEATHERICON.error}" />`;
             cardEventStatus.classList.remove('safe')
-            cardEventStatus.classList.remove('warn')
+            cardEventStatus.classList.remove('warning')
             cardEventStatus.classList.remove('unsafe')
             cardEventStatus.classList.add('error')
             cardEventStatus.innerHTML = `<span>${'Error'}<span>`;
@@ -122,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    function displayCurrentWeatherData(weatherData) {   
+    function displayCurrentWeatherData(weatherData) {
 
         if (weatherData == undefined || null) {
             throw new Error('Data unavaialble');
@@ -141,11 +156,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // render data
         cardTitle.innerHTML = 'Today'
-        cardImage.innerHTML = `<img class="iconImg" src="${WEATHER_INFROMATION.cardImage}" />`;
+        cardImage.innerHTML = `<img class="iconImg" src="${WEATHER_INFROMATION.cardImage}" alt="${weatherData.current.weather[0].description}" />`;
         cardEventStatus.classList.add(WEATHER_INFROMATION.eventPossibilityClass)
         cardEventStatus.innerHTML = `<span>${WEATHER_INFROMATION.eventPossibilityClass}<span>`;
         cardDescription.innerHTML = weatherData.current.weather[0].description;
-        cardDetails.innerHTML = `<span>Humidity: ${WEATHER_INFROMATION.details.humidity}%</span> <span>Temperature: ${WEATHER_INFROMATION.details.temperature}°C</span> <span>Wind Speed: ${WEATHER_INFROMATION.details.speed} miles/hour.</span>`
+        cardDetails.innerHTML = `<span>Humidity: ${WEATHER_INFROMATION.details.humidity}%</span> <span>Temperature: ${WEATHER_INFROMATION.details.temperature}°C</span> <span>Wind Speed: ${WEATHER_INFROMATION.details.speed} km/hour.</span>`
 
     }
 
@@ -165,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let cardEventStatus = newCard.querySelector('.event-status');
             newCard.classList.remove('d-none');
             cardEventStatus.classList.remove('safe');
-            cardEventStatus.classList.remove('warn');
+            cardEventStatus.classList.remove('warning');
             cardEventStatus.classList.remove('unsafe');
 
             dayNumber++;
@@ -179,11 +194,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // render data
             cardTitle.innerHTML = DaysOfWeek[dayNumber];
-            cardImage.innerHTML = `<img class="iconImg" src="${WEATHER_INFROMATION.cardImage}" />`;
+            cardImage.innerHTML = `<img class="iconImg" src="${WEATHER_INFROMATION.cardImage}" alt="${weatherData.daily[i].weather[0].description}" />`;
             cardEventStatus.classList.add(WEATHER_INFROMATION.eventPossibilityClass)
             cardEventStatus.innerHTML = `<span>${WEATHER_INFROMATION.eventPossibilityClass}<span>`;
             cardDescription.innerHTML = weatherData.daily[i].weather[0].description;
-            cardDetails.innerHTML = `<span>Humidity: ${WEATHER_INFROMATION.details.humidity}%</span> <span>Temperature: ${WEATHER_INFROMATION.details.temperature}°C</span> <span>Wind Speed: ${WEATHER_INFROMATION.details.speed} miles/hour.</span>`
+            cardDetails.innerHTML = `<span>Humidity: ${WEATHER_INFROMATION.details.humidity}%</span> <span>Temperature: ${WEATHER_INFROMATION.details.temperature}°C</span> <span>Wind Speed: ${WEATHER_INFROMATION.details.speed} km/hour.</span>`
 
 
 
@@ -206,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let cardEventStatus = newCard.querySelector('.event-status');
             newCard.classList.remove('d-none');
             cardEventStatus.classList.remove('safe');
-            cardEventStatus.classList.remove('warn');
+            cardEventStatus.classList.remove('warning');
             cardEventStatus.classList.remove('unsafe');
 
 
@@ -220,11 +235,16 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 cardTitle.innerHTML = (epochToJsDate(weatherData.hourly[i].dt).getHours() - 12 == 0) ? "12 pm" : (epochToJsDate(weatherData.hourly[i].dt).getHours() - 12) + " pm"
             }
-            cardImage.innerHTML = `<img class="iconImg" src="${WEATHER_INFROMATION.cardImage}" />`;
+
+            if ((epochToJsDate(weatherData.hourly[i].dt).getHours() - 12) > 6 && cardTitle.innerHTML.includes('pm')) {
+                cardImage.innerHTML = `<img class="iconImg" src="${WEATHERICON.clear_night}" alt="${weatherData.hourly[i].weather[0].description}" />`;
+            } else {
+                cardImage.innerHTML = `<img class="iconImg" src="${WEATHER_INFROMATION.cardImage}" alt="${weatherData.hourly[i].weather[0].description}" />`;
+            }
             cardEventStatus.classList.add(WEATHER_INFROMATION.eventPossibilityClass)
             cardEventStatus.innerHTML = `<span>${WEATHER_INFROMATION.eventPossibilityClass}<span>`;
             cardDescription.innerHTML = weatherData.hourly[i].weather[0].description;
-            cardDetails.innerHTML = `<span>Humidity: ${WEATHER_INFROMATION.details.humidity}%</span> <span>Temperature: ${WEATHER_INFROMATION.details.temperature}°C</span> <span>Wind Speed: ${WEATHER_INFROMATION.details.speed} miles/hour.</span>`
+            cardDetails.innerHTML = `<span>Humidity: ${WEATHER_INFROMATION.details.humidity}%</span> <span>Temperature: ${WEATHER_INFROMATION.details.temperature}°C</span> <span>Wind Speed: ${WEATHER_INFROMATION.details.speed} km/hour.</span>`
 
             weatherDOMContainer.innerHTML += newCard.innerHTML;
         }
@@ -278,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return {
                     cardImage: WEATHERICON.cloudy_rains_light,
-                    eventPossibilityClass: 'warn',
+                    eventPossibilityClass: 'warning',
                     details: WeatherDetails
                 }
                 break;
@@ -286,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return {
                     cardImage: WEATHERICON.cloudy_rains_light,
-                    eventPossibilityClass: 'warn',
+                    eventPossibilityClass: 'warning',
                     details: WeatherDetails
                 }
                 break;
@@ -294,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return {
                     cardImage: WEATHERICON.heavy_rains,
-                    eventPossibilityClass: 'warn',
+                    eventPossibilityClass: 'warning',
                     details: WeatherDetails
                 }
                 break;
@@ -375,14 +395,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return {
                     cardImage: WEATHERICON.cloudy_rains_light,
-                    eventPossibilityClass: 'warn',
+                    eventPossibilityClass: 'warning',
                 }
                 break;
             case 'moderate rain':
 
                 return {
                     cardImage: WEATHERICON.cloudy_rains_light,
-                    eventPossibilityClass: 'warn',
+                    eventPossibilityClass: 'warning',
                 }
                 break;
             case 'rain':
@@ -442,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (type == 'hourly') {
                 WeatherDetails = {
                     humidity: data.hourly[i].humidity,
-                    temperature: data.hourly[i].temp.max,
+                    temperature: data.hourly[i].temp,
                     speed: data.hourly[i].wind_speed,
                 }
                 switchClause = data.hourly[i].weather[0].description.toLowerCase()
@@ -503,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return {
                     cardImage: WEATHERICON.cloudy_rains_light,
-                    eventPossibilityClass: 'warn',
+                    eventPossibilityClass: 'warning',
                     details: WeatherDetails
                 }
                 break;
@@ -511,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return {
                     cardImage: WEATHERICON.cloudy_rains_light,
-                    eventPossibilityClass: 'warn',
+                    eventPossibilityClass: 'warning',
                     details: WeatherDetails
                 }
                 break;
@@ -570,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let summaryTitle = countryLocation
         let summaryDate = currentDate
         let summaryImage = weatherDetails.cardImage
-        let summaryDetails = `<span>Humidity: ${weatherDetails.details.humidity}%</span> <span>Temperature: ${weatherDetails.details.temperature}°C</span> <span>Wind Speed: ${weatherDetails.details.speed} miles/hour.</span>`
+        let summaryDetails = `<span>Humidity: ${weatherDetails.details.humidity}%</span> <span>Temperature: ${weatherDetails.details.temperature}°C</span> <span>Wind Speed: ${weatherDetails.details.speed} km/hour.</span>`
 
 
         let summaryItem = document.querySelector('.summaryItem')
@@ -594,10 +614,20 @@ document.addEventListener('DOMContentLoaded', function () {
         return data;
     }
 
-    function getQueryCurrentPlace(queryString) {
+    function getQueryCurrentPlace(queryReq) {
         if (pageLink.includes('index')) {
-            queryString = queryString.toLowerCase();
-            const query = `https://api.openweathermap.org/data/2.5/weather?q=${queryString}&appid=${API_KEY}`
+          
+            let query;
+
+            if (typeof (queryReq) === 'string') {
+                queryReq = queryReq.toLowerCase();
+                query = `https://api.openweathermap.org/data/2.5/weather?q=${queryReq}&appid=${API_KEY}&units=metric`
+            } else if (typeof (queryReq) === 'object') {
+                query = `https://api.openweathermap.org/data/2.5/weather?lat=${queryReq.lat}&lon=${queryReq.lon}&appid=${API_KEY}&units=metric`
+            } else {
+                query = `https://api.openweathermap.org/data/2.5/weather?q=${'new york'}&appid=${API_KEY}&units=metric`
+            }
+
             let data = getAPIdata(encodeURI(query));
             data.then(function (data) {
 
@@ -608,6 +638,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     temperature: data.main.temp,
                     wind_speed: data.wind.speed,
                 }
+                const country = data.sys.country;
                 const icon = getWeatherCurrentStatus(data.weather[0].description).cardImage;
 
                 const QueryLocationData = {
@@ -623,19 +654,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     location: location,
                     time: time,
                     weatherDetails: details,
-                    icon: icon
+                    icon: icon,
+                    country:country
                 }
 
-                let summaryTitle = weatherData.location
+                let summaryTitle = `${weatherData.location}, ${weatherData.country} `
                 let summaryDate = weatherData.time
                 let summaryImage = weatherData.icon
-                let summaryDetails = `<span>Humidity: ${weatherData.weatherDetails.humidity}%</span> <span>Temperature: ${weatherData.weatherDetails.temperature}°K</span> <span>Wind Speed: ${weatherData.weatherDetails.wind_speed} miles/hour.</span>`
+                let summaryDetails = `<span>Humidity: ${weatherData.weatherDetails.humidity}%</span> <span>Temperature: ${weatherData.weatherDetails.temperature}°C</span> <span>Wind Speed: ${weatherData.weatherDetails.wind_speed} km/hour.</span>`
 
 
                 let summaryItem = document.querySelector('.summaryItem')
                 summaryItem.querySelector('#title').innerHTML = summaryTitle
                 summaryItem.querySelector('#date').innerHTML = summaryDate
-                summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${summaryImage}" width="300" height="300" />`
+                summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${summaryImage}" width="300" alt="${weatherData.location}_icon" />`
                 summaryItem.querySelector('#weatherDetails').innerHTML = summaryDetails
 
             }).catch(function (error) {
@@ -643,8 +675,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 let summaryItem = document.querySelector('.summaryItem')
                 summaryItem.querySelector('#title').innerHTML = 'Unknown location'
                 summaryItem.querySelector('#date').innerHTML = 'No time'
-                summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${WEATHERICON.error}" width="300" height="300" />`
-                summaryItem.querySelector('#weatherDetails').innerHTML = 'Seems like there is your problem with the query'
+                summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${WEATHERICON.error}" width="300" alt="error" />`
+                summaryItem.querySelector('#weatherDetails').innerHTML = 'Seems like there is a problem with the name of the location you are searching'
             })
 
             document.querySelector('#searchButton').addEventListener('click', function () {
@@ -652,28 +684,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         }
     }
-
-
-    // const W_localStorageData = JSON.parse(localStorage.getItem('CurrentLocationData'))
-    // let W_lat = W_localStorageData.lat;
-    // let W_lon = W_localStorageData.lon;
-
-    // const worker = new Worker('weatherWorker.js')
-
-    // worker.onerror = (error) => {
-    //     console.log(error);
-    //     worker.terminate();
-    // };
-
-    // worker.onmessage = (messageEvt) => {
-
-    //     if (messageEvt.data.weatherData != null && location.href.toString().includes('index')) {
-    //         console.log('summary update');
-    //         updateSummary(messageEvt.data.weatherData)
-    //     }
-    // }
-
-    // worker.postMessage({ lat: W_lat, lon: W_lon })
 
 });
 

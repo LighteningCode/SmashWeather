@@ -20,12 +20,35 @@ p {
     margin-bottom: 15px;
 }
 
-.searchContainer {
+.flex-row{
     display: flex;
-    flex-direction: row;
     justify-content: center;
-    margin: 5vh 0px 5vh 0px
+    flex-direction: row;
 }
+
+#searchbox{
+    margin-right: 2px;
+}
+
+.searchContainer {
+    width: 30vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+
+}
+
+.searchContainer > *{
+    margin-bottom: 5px;
+}
+
+input{
+    height: 30px;
+}
+
+
 
 .weatherData{
     display: flex;
@@ -89,13 +112,17 @@ button.active{
     height: 30px;
 }
 
-#searchbutton{
+#searchButton{
     width: 60px;
     height: 35px;
 }
 
 .text-center {
     text-align: center !important;
+}
+
+.event-status{
+    text-transform: capitalize;
 }
 
 .event-status.safe{
@@ -108,7 +135,7 @@ button.active{
     color: rgb(255, 78, 8);
 }
 
-.event-status.warn{
+.event-status.warning{
     background-color: rgb(168, 165, 10);
     color: rgb(255, 230, 8);
 }
@@ -187,6 +214,14 @@ button.active{
 }
 
 @media (max-width: 576px) {
+
+    .searchContainer {
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
     .weather-card {
         width: 40vw;
         height: 220px;
