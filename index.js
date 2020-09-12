@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 const country = data.sys.country;
                 const icon = getWeatherCurrentStatus(data.weather[0].description).cardImage;
-
+                const description = data.weather[0].description;
                 const QueryLocationData = {
                     location_name: data.name,
                     lat: data.coord.lat,
@@ -653,6 +653,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const weatherData = {
                     location: location,
                     time: time,
+                    description: description,
                     weatherDetails: details,
                     icon: icon,
                     country:country
@@ -660,6 +661,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 let summaryTitle = `${weatherData.location}, ${weatherData.country} `
                 let summaryDate = weatherData.time
+                let summaryDescription = weatherData.description
                 let summaryImage = weatherData.icon
                 let summaryDetails = `<span>Humidity: ${weatherData.weatherDetails.humidity}%</span> <span>Temperature: ${weatherData.weatherDetails.temperature}°C</span> <span>Wind Speed: ${weatherData.weatherDetails.wind_speed} km/hour.</span>`
 
@@ -667,6 +669,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let summaryItem = document.querySelector('.summaryItem')
                 summaryItem.querySelector('#title').innerHTML = summaryTitle
                 summaryItem.querySelector('#date').innerHTML = summaryDate
+                summaryItem.querySelector('#description').innerHTML = summaryDescription
                 summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${summaryImage}" width="300" height="315" alt="${weatherData.location}_icon" />`
                 summaryItem.querySelector('#weatherDetails').innerHTML = summaryDetails
 

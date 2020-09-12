@@ -7,19 +7,21 @@
     <link rel="stylesheet" href="./styles.css">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="apple-touch-icon" href="./icon-192.png">
+    <meta name="theme-color" content="#1698ff">
+
 </head>
 <body>
     <h3 class="text-center">Smash It Weather</h3>
 
-    <section class="nav-btns">
+    <nav class="nav-btns">
         <button id="summary"><a href="./index.html">Summary</a></button>
         <button id="weekly"><a href="./weekly.html">Weekly</a></button>
         <button class="active" id="hourly"><a href="./hourly.html">Hourly</a></button>
         
         <!-- summary, hourly, weekly -->
-    </section>
+    </nav>
 
-    <h4 id="weatherLocation" class="text-center"></h4>
+    <h3 id="weatherLocation" class="text-center"></h3>
     
     <section class="weatherData">
 
@@ -35,13 +37,13 @@
                     <p class="weather-description text-center"></p>
                 </div>
 
-                <div class="weather-image">
+                <figure class="weather-image">
 
-                </div>
+                </figure>
 
-                <div class="weather-details text-center">
+                <details class="weather-details text-center">
 
-                </div>
+                </details>
             </div>
         </div>
 
@@ -52,17 +54,17 @@
                     <div class="event-status text-center">
 
                     </div>
-                    <h3 class="weather-title text-center">Loading...</h3>
+                    <time><h3 class="weather-title text-center">Loading...</h3></time>
                     <p class="weather-description text-center"></p>
                 </div>
 
-                <div class="weather-image">
+                <figure class="weather-image">
 
-                </div>
+                </figure>
 
-                <div class="weather-details text-center">
+                <details class="weather-details text-center">
 
-                </div>
+                </details>
             </div>
         </div>
 

@@ -20,12 +20,12 @@
     <h3 class="text-center">Smash It Weather</h3>
 
 
-    <section class="nav-btns">
+    <nav class="nav-btns">
         <button class="active" id="summary"><a href="./index.html">Summary</a></button>
         <button id="weekly"><a href="./weekly.html">Weekly</a></button>
         <button id="hourly"><a href="./hourly.html">Hourly</a></button>
         <!-- summary, hourly, weekly -->
-    </section>
+    </nav>
 
 
     <div class="flex-row">
@@ -40,17 +40,24 @@
         </section>
     </div>
 
+    <main>
 
-    <div class="summaryConatiner">
-        <div class="summaryItem">
-            <h3 id="title" class="text-center"></h3>
-            <h5 id="date" class="text-center"></h5>
+        <div class="summaryConatiner">
+            <div class="summaryItem">
+                <h3 id="title" class="text-center"></h3>
+                <h4 id="description"></h4>
+                <time>
+                    <h5 id="date" class="text-center"></h5>
+                </time>
 
-            <div id="weatherImage"></div>
+                <figure id="weatherImage"></figure>
 
-            <div id="weatherDetails" class="text-center"></div>
+                <details id="weatherDetails" class="text-center"></details>
+            </div>
         </div>
-    </div>
+
+    </main>
+
 
 
 
