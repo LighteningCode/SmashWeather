@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
     function displayCurrentWeatherData(weatherData) {
 
         if (weatherData == undefined || null) {
@@ -615,6 +616,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getQueryCurrentPlace(queryReq) {
+        
         if (pageLink.includes('index')) {
           
             let query;
@@ -678,15 +680,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 let summaryItem = document.querySelector('.summaryItem')
                 summaryItem.querySelector('#title').innerHTML = 'Unknown location'
                 summaryItem.querySelector('#date').innerHTML = 'No time'
+                summaryItem.querySelector('#description').innerHTML = ''
                 summaryItem.querySelector('#weatherImage').innerHTML = `<img src="${WEATHERICON.error}" width="300" height="315" alt="error" />`
                 summaryItem.querySelector('#weatherDetails').innerHTML = 'Seems like there is a problem with the name of the location you are searching'
             })
 
-            document.querySelector('#searchButton').addEventListener('click', function () {
-                getQueryCurrentPlace(document.querySelector('#searchbox').value);
-            })
+
+
         }
     }
+
+    document.querySelector('#searchButton').addEventListener('click', function (event) {
+        event.preventDefault();
+        getQueryCurrentPlace(document.querySelector('#searchbox').value);
+    })
+
+    document.querySelector('#searchForm').addEventListener('submit', function (event) {
+        event.preventDefault()
+        getQueryCurrentPlace(document.querySelector('#searchbox').value);
+    })
 
 });
 
